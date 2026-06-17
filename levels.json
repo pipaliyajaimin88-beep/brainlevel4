@@ -1,0 +1,89 @@
+{
+  "worlds": [
+    {
+      "id": 1,
+      "name": "The Beginning",
+      "locked": false,
+      "levels": [
+        {
+          "id": 1,
+          "difficulty": "easy",
+          "moves": 15,
+          "time": 60,
+          "target": 15,
+          "grid": [
+            [1, 2, 1, 2],
+            [2, 1, 2, 1],
+            [1, 2, 1, 2],
+            [2, 1, 2, 1]
+          ]
+        },
+        {
+          "id": 2,
+          "difficulty": "easy",
+          "moves": 12,
+          "time": 45,
+          "target": 20,
+          "grid": [
+            [3, 3, 4, 4],
+            [4, 4, 3, 3],
+            [3, 3, 4, 4],
+            [4, 4, 3, 3]
+          ]
+        },
+        {
+          "id": 3,
+          "difficulty": "medium",
+          "moves": 20,
+          "time": 90,
+          "target": 30,
+          "grid": [
+            [1, 2, 3, 4],
+            [4, 3, 2, 1],
+            [1, 2, 3, 4],
+            [4, 3, 2, 1]
+          ]
+        },
+        {
+          "id": 4,
+          "difficulty": "medium",
+          "moves": 15,
+          "time": 60,
+          "target": 25,
+          "grid": [
+            [5, 1, 5, 1],
+            [1, "L", "L", 5],
+            [5, "L", "L", 1],
+            [1, 5, 1, 5]
+          ]
+        },
+        {
+          "id": 5,
+          "difficulty": "hard",
+          "moves": 10,
+          "time": 30,
+          "target": 40,
+          "grid": [
+            ["B", 1, 2, "B"],
+            [3, 4, 5, 1],
+            [2, 3, 4, 5],
+            ["B", 1, 2, "B"]
+          ]
+        },
+        {
+          "id": 6,
+          "difficulty": "hard",
+          "moves": 25,
+          "time": 120,
+          "target": 60,
+          "grid": [
+            ["R", "L", "L", "R"],
+            ["L", 1, 2, "L"],
+            ["L", 3, 4, "L"],
+            ["R", "L", "L", "R"]
+          ]
+        }
+      ]
+    }
+  ]
+}
