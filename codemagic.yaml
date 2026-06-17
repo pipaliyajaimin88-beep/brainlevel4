@@ -1,0 +1,21 @@
+workflows:
+  android-build:
+    artifacts:
+    - android/app/build/outputs/apk/debug/app-debug.apk
+    environment:
+      java: 17
+      node: 20
+    instance_type: mac_mini_m1
+    max_build_duration: 60
+    name: BrainLevel Android APK
+    scripts:
+    - name: Setup Project
+      script: "cat > package.json << 'EOF'\n{\"name\":\"brainlevel\",\"version\":\"1.0.0\",\"dependencies\":{\"@capacitor/android\":\"5.7.4\",\"@capacitor/cli\":\"5.7.4\",\"@capacitor/core\":\"5.7.4\"}}\nEOF\ncat > capacitor.config.json << 'EOF'\n{\"appId\":\"com.brainlevel.game\",\"appName\":\"BrainLevel\",\"webDir\":\"www\"}\nEOF\nmkdir -p www\nfor f in index.html game-logic.js styles.css levels.json manifest.json; do\n  [ -f \"$f\" ] && cp \"$f\" www/ || true\ndone\nnpm install --legacy-peer-deps\nnpm install -g @capacitor/cli@5.7.4\nrm -rf android\nnpx cap add android\nnpx cap sync android\ncp node_modules/@capacitor/android/variables.gradle android/variables.gradle || true\nmkdir -p android/app\nprintf \"include ':capacitor-android'\\nproject(':capacitor-android').projectDir = new File('../node_modules/@capacitor/android/capacitor')\\n\" > android/capacitor.settings.gradle\nprintf \"dependencies {}\\n\" > android/app/capacitor.build.gradle\nmkdir -p android/capacitor-cordova-android-plugins/src/main\ncat > android/capacitor-cordova-android-plugins/build.gradle << 'GRADLE'\napply plugin: 'com.android.library'\nandroid {\n    namespace \"com.capacitorjs.cordova.plugins\"\n    compileSdkVersion rootProject.ext.compileSdkVersion\n    defaultConfig {\n        minSdkVersion rootProject.ext.minSdkVersion\n        targetSdkVersion rootProject.ext.targetSdkVersion\n    }\n}\ndependencies {}\nGRADLE\ncat > android/capacitor-cordova-android-plugins/src/main/AndroidManifest.xml << 'MANIFEST'\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\">\n</manifest>\nMANIFEST\ncat > android/gradle.properties << 'PROPS'\norg.gradle.jvmargs=-Xmx2048m -XX:MaxMetaspaceSize=512m\norg.gradle.daemon=false\norg.gradle.parallel=false\nandroid.useAndroidX=true\nandroid.enableJetifier=true\nPROPS\necho \"SETUP COMPLETE\"\n"
+    - name: Build APK
+      script: 'cd android
+
+        chmod +x gradlew
+
+        ./gradlew assembleDebug --no-daemon --max-workers 2
+
+        '

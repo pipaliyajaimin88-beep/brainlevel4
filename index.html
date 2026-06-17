@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>BrainLevel</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash" class="screen active">
+  <div class="splash-logo">
+    <div class="splash-brain">🧩</div>
+    <div class="splash-title-brain">BRAIN</div>
+    <div class="splash-title-level">LEVEL</div>
+    <div class="splash-subtitle">Test Your Mind</div>
+  </div>
+  <div class="splash-loader">
+    <div id="splash-loader-fill" class="splash-loader-fill"></div>
+  </div>
+</div>
+
+<!-- HOME -->
+<div id="home" class="screen">
+  <div class="home-top">
+    <span class="coin-display">🪙 0</span>
+  </div>
+  <div class="home-logo">
+    <div class="home-brain">🧩</div>
+    <div class="home-title-brain">BRAIN</div>
+    <div class="home-title-level">LEVEL</div>
+  </div>
+  <div class="home-buttons">
+    <button id="play-btn" class="btn btn-purple btn-large">▶ PLAY</button>
+    <button id="leaderboard-btn" class="btn btn-gray btn-medium">🏆 Leaderboard</button>
+    <button id="shop-btn" class="btn btn-golden btn-medium">🛒 Shop</button>
+    <button id="settings-btn" class="btn btn-gray btn-small">⚙ Settings</button>
+  </div>
+  <div class="daily-banner">
+    <p>⚡ Daily Challenge Available!</p>
+    <p style="font-size:10px;margin-top:2px;color:rgba(245,158,11,0.7)">Earn 100 🪙 bonus today!</p>
+  </div>
+</div>
+
+<!-- LEVEL SELECT -->
+<div id="levelselect" class="screen">
+  <div class="ls-header">
+    <button class="back-btn">←</button>
+    <span class="ls-title">SELECT LEVEL</span>
+    <span class="coin-display" style="font-size:12px;">🪙 0</span>
+  </div>
+  <div class="world-tabs">
+    <button class="world-tab active" onclick="renderLevelGrid(0)">🌍 World 1</button>
+    <button class="world-tab locked">🔒 World 2</button>
+    <button class="world-tab locked">🔒 World 3</button>
+  </div>
+  <div id="level-grid" class="level-grid"></div>
+  <div class="ls-footer">
+    <div id="ls-progress-text" class="ls-progress-text">⭐ 0/18 Stars</div>
+    <div class="ls-progress-bar">
+      <div id="ls-progress-fill" class="ls-progress-fill" style="width:0%"></div>
+    </div>
+  </div>
+</div>
+
+<!-- GAMEPLAY -->
+<div id="gameplay" class="screen">
+  <div class="gp-header">
+    <button class="back-btn">←</button>
+    <span id="gp-level-name" class="gp-level-name">Level 1</span>
+    <button id="pause-btn" class="pause-btn">⏸</button>
+  </div>
+  <div class="hud-row">
+    <div class="hud-item">
+      <div class="hud-label">SCORE</div>
+      <div id="score-val" class="hud-value">0</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">MOVES</div>
+      <div id="moves-val" class="hud-value">15</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">TIME</div>
+      <div id="time-val" class="hud-value">60</div>
+    </div>
+  </div>
+  <div class="target-row">
+    <span id="target-text" style="font-size:11px;color:rgba(255,255,255,0.5)">0/15 tiles</span>
+    <div class="target-progress">
+      <div id="target-fill" class="target-fill" style="width:0%"></div>
+    </div>
+    <span style="font-size:11px;color:rgba(255,255,255,0.5)">🎯</span>
+  </div>
+  <div class="game-grid-wrapper">
+    <div id="game-grid" class="game-grid"></div>
+  </div>
+  <div class="action-bar">
+    <button id="hint-btn" class="action-btn">💡 Hint (3)</button>
+    <button id="undo-btn" class="action-btn">↩ Undo (3)</button>
+  </div>
+  <!-- PAUSE OVERLAY (inside gameplay, fixed position covers everything) -->
+  <div id="pause-overlay">
+    <div class="pause-title">⏸ PAUSED</div>
+    <button id="resume-btn" class="btn btn-purple btn-large">▶ Resume</button>
+    <button class="btn btn-gray btn-medium back-btn">🏠 Home</button>
+  </div>
+</div>
+
+<!-- WIN -->
+<div id="win" class="screen">
+  <div class="confetti-container" id="confetti-container"></div>
+  <div class="win-trophy">🏆</div>
+  <div class="win-title">LEVEL COMPLETE!</div>
+  <div class="win-subtitle">Amazing brain power!</div>
+  <div id="win-stars" class="win-stars">⭐⭐⭐</div>
+  <div id="win-score" class="win-score">0 pts</div>
+  <div id="win-coins" class="win-coins">+30 🪙</div>
+  <div class="win-buttons">
+    <button id="next-level-btn" class="btn btn-purple btn-large">▶ Next Level</button>
+    <button id="replay-btn" class="btn btn-gray btn-medium">↩ Replay</button>
+    <button id="win-home-btn" class="btn btn-gray btn-small">🏠 Home</button>
+  </div>
+</div>
+
+<!-- LOSE -->
+<div id="lose" class="screen">
+  <div class="lose-icon">💔</div>
+  <div id="lose-reason" class="lose-title">OUT OF MOVES!</div>
+  <div class="lose-subtitle">Better luck next time!</div>
+  <div id="lose-score" class="lose-score">Score: 0</div>
+  <div class="lose-buttons">
+    <button id="retry-btn" class="btn btn-purple btn-large">🔄 Try Again</button>
+    <button class="btn btn-golden btn-medium">📺 Watch Ad (+5 Moves)</button>
+    <button id="lose-home-btn" class="btn btn-gray btn-small">🏠 Home</button>
+  </div>
+</div>
+
+<!-- SHOP -->
+<div id="shop" class="screen">
+  <div class="shop-header">
+    <button class="back-btn">←</button>
+    <span class="shop-title">🛒 SHOP</span>
+    <span class="shop-coins">🪙 0</span>
+  </div>
+  <div class="shop-tabs">
+    <button class="shop-tab active">POWER-UPS</button>
+    <button class="shop-tab">COIN PACKS</button>
+    <button class="shop-tab">REMOVE ADS</button>
+  </div>
+  <div class="shop-items">
+    <div class="shop-item">
+      <div class="shop-icon">💡</div>
+      <div class="shop-info">
+        <div class="shop-name">Hint Pack x5</div>
+        <div class="shop-desc">Shows the best possible move</div>
+      </div>
+      <div class="shop-buy-area">
+        <div class="shop-price">100 🪙</div>
+        <button class="buy-btn" onclick="buyItem('hint',100,'hint')">BUY</button>
+      </div>
+    </div>
+    <div class="shop-item">
+      <div class="shop-icon">↩</div>
+      <div class="shop-info">
+        <div class="shop-name">Undo Pack x5</div>
+        <div class="shop-desc">Reverse your last move</div>
+      </div>
+      <div class="shop-buy-area">
+        <div class="shop-price">80 🪙</div>
+        <button class="buy-btn" onclick="buyItem('undo',80,'undo')">BUY</button>
+      </div>
+    </div>
+    <div class="shop-item">
+      <div class="shop-icon">⏱</div>
+      <div class="shop-info">
+        <div class="shop-name">+30 Seconds</div>
+        <div class="shop-desc">Extra time for current level</div>
+      </div>
+      <div class="shop-buy-area">
+        <div class="shop-price">150 🪙</div>
+        <button class="buy-btn" onclick="buyItem('time',150,'time')">BUY</button>
+      </div>
+    </div>
+    <div class="shop-item">
+      <div class="shop-icon">💣</div>
+      <div class="shop-info">
+        <div class="shop-name">Bomb Power-Up</div>
+        <div class="shop-desc">Clears a 3x3 area instantly</div>
+      </div>
+      <div class="shop-buy-area">
+        <div class="shop-price">200 🪙</div>
+        <button class="buy-btn" onclick="buyItem('bomb',200,'bomb')">BUY</button>
+      </div>
+    </div>
+    <div class="shop-item">
+      <div class="shop-icon">🌈</div>
+      <div class="shop-info">
+        <div class="shop-name">Rainbow Tile x3</div>
+        <div class="shop-desc">Matches any color tile</div>
+      </div>
+      <div class="shop-buy-area">
+        <div class="shop-price">250 🪙</div>
+        <button class="buy-btn" onclick="buyItem('rainbow',250,'rainbow')">BUY</button>
+      </div>
+    </div>
+    <div class="shop-item">
+      <div class="shop-icon">👑</div>
+      <div class="shop-info">
+        <div class="shop-name">Remove All Ads</div>
+        <div class="shop-desc">Clean experience forever!</div>
+      </div>
+      <div class="shop-buy-area">
+        <div class="shop-price">₹99</div>
+        <button class="buy-btn" style="background:#f59e0b;" onclick="alert('Coming soon!')">BUY</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div id="settings" class="screen">
+  <div class="ls-header">
+    <button class="back-btn">←</button>
+    <span class="ls-title">⚙ SETTINGS</span>
+    <span></span>
+  </div>
+  <div class="settings-content" style="flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch;">
+    <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:14px;margin-bottom:12px;">
+      <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">Audio</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <span style="color:white;font-size:14px;">🎵 Background Music</span>
+        <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="color:white;font-size:14px;">🔊 Sound Effects</span>
+        <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:14px;margin-bottom:12px;">
+      <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">Game</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <span style="color:white;font-size:14px;">📳 Vibration</span>
+        <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="color:white;font-size:14px;">🔔 Notifications</span>
+        <label class="toggle"><input type="checkbox"><span class="slider"></span></label>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border-radius:14px;padding:14px;margin-bottom:12px;">
+      <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">About</p>
+      <p style="color:white;font-size:13px;margin-bottom:4px;">BrainLevel v1.0</p>
+      <p style="color:rgba(255,255,255,0.4);font-size:11px;">Color Puzzle Game</p>
+      <button class="btn btn-golden btn-medium" style="margin-top:12px;" onclick="alert('Thank you! ⭐')">⭐ Rate App</button>
+    </div>
+    <button class="btn btn-red btn-medium">🗑 Reset Progress</button>
+  </div>
+</div>
+
+<!-- LEADERBOARD -->
+<div id="leaderboard" class="screen">
+  <div class="ls-header">
+    <button class="back-btn">←</button>
+    <span class="ls-title">🏆 LEADERBOARD</span>
+    <span></span>
+  </div>
+  <div style="display:flex;gap:6px;padding:0 16px 12px;flex-shrink:0;">
+    <button class="shop-tab active" style="flex:1;">GLOBAL</button>
+    <button class="shop-tab" style="flex:1;">FRIENDS</button>
+    <button class="shop-tab" style="flex:1;">WEEKLY</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:0 16px 16px;-webkit-overflow-scrolling:touch;">
+    <!-- Top 3 -->
+    <div style="display:flex;justify-content:center;align-items:flex-end;gap:12px;margin-bottom:20px;">
+      <div style="text-align:center;">
+        <div style="font-size:28px;">🥈</div>
+        <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:8px 6px;margin-top:4px;">
+          <div style="font-size:20px;">😎</div>
+          <div style="font-size:10px;color:white;font-weight:600;">Arjun K</div>
+          <div style="font-size:10px;color:#f59e0b;">8,420</div>
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:36px;">🥇</div>
+        <div style="background:rgba(245,158,11,0.1);border:1px solid #f59e0b;border-radius:10px;padding:8px 6px;margin-top:4px;">
+          <div style="font-size:24px;">🧠</div>
+          <div style="font-size:10px;color:white;font-weight:600;">BrainMaster</div>
+          <div style="font-size:10px;color:#f59e0b;">12,350</div>
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:28px;">🥉</div>
+        <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:8px 6px;margin-top:4px;">
+          <div style="font-size:20px;">🎮</div>
+          <div style="font-size:10px;color:white;font-weight:600;">Priya S</div>
+          <div style="font-size:10px;color:#f59e0b;">7,890</div>
+        </div>
+      </div>
+    </div>
+    <!-- List -->
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="background:rgba(255,255,255,0.04);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;">
+        <span style="color:rgba(255,255,255,0.5);font-size:13px;width:20px;">4</span>
+        <span style="font-size:18px;">😊</span>
+        <span style="color:white;font-size:13px;flex:1;">Rahul M</span>
+        <span style="color:#f59e0b;font-size:13px;font-weight:600;">6,540</span>
+      </div>
+      <div style="background:rgba(124,58,237,0.15);border:1px solid #7c3aed;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;">
+        <span style="color:#8b5cf6;font-size:13px;width:20px;">5</span>
+        <span style="font-size:18px;">👤</span>
+        <span style="color:white;font-size:13px;flex:1;">You</span>
+        <span style="color:#f59e0b;font-size:13px;font-weight:600;">0</span>
+      </div>
+    </div>
+    <p style="color:rgba(255,255,255,0.3);font-size:11px;text-align:center;margin-top:16px;">🌐 Global leaderboard coming soon!</p>
+  </div>
+</div>
+
+<script src="game-logic.js"></script>
+</body>
+</html>
